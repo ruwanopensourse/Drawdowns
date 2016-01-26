@@ -269,7 +269,7 @@ function pieChart(){
 	        label: {
 	            format: function (value, ratio, id) {
 	                return d3.format('')(value);
-	            }
+	            },
 	        }
 	    }
 	});
