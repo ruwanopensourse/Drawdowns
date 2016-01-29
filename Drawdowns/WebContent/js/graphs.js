@@ -522,7 +522,12 @@ function drawScatterPlot_yearly(json_object, year, month, tag) {
 				}
 			},
 			y : {
-				label : 'Permno',
+				label : 'NAICS Code',
+				tick : {
+					format : function(d) {
+						return parseInt(d /1000);
+					},
+				},
 			}
 		},
 		grid : {
@@ -578,8 +583,6 @@ function drawIndex_yearly(json_object, year, month, tag) {
 				tick : {
 					values : [ 0.10, 0, -0.10, -0.20, -0.30 ]
 				},
-
-			// max : 2300,
 			},
 		},
 		grid : {

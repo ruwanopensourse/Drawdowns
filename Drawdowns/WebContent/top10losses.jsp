@@ -216,6 +216,7 @@ var Dr_value=100,LossMcap_value=20,tab=2004,data_init;
 							success : function(data) {
 								data_init = data;
 								draw_me(data);
+								console.log(data);
 								},
 								error : function(data, error) {
 									console.log(error);
@@ -225,7 +226,6 @@ var Dr_value=100,LossMcap_value=20,tab=2004,data_init;
 					}
 					function draw_me(data){
 						var Ready_output = sccaterPlot_dataPreprocess_withTopFilter(data,Dr_value,LossMcap_value);
-						//call method in graph.js to draw scatter-plot
 						drawScatterPlot_yearly(
 							Ready_output,tab , 01,
 					 		'#scatter_plot'+tab);
