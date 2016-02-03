@@ -17,11 +17,12 @@ public class db_connections {
 	String url = "jdbc:mysql://localhost:3306/Karsha_drawdowns";
 	String username = "root";
 	String password = "";
-	/*	
-	String url = "jdbc:mysql://clipdb-sm3.umiacs.umd.edu:3306/Karsha_drawdowns";
-	String username = "karsha";
-	String password = "em$.N0w";
-*/
+	/*
+	 * String url =
+	 * "jdbc:mysql://clipdb-sm3.umiacs.umd.edu:3306/Karsha_drawdowns"; String
+	 * username = "karsha"; String password = "em$.N0w";
+	 */
+
 	public static Connection con = null;
 	PreparedStatement pst = null;
 	String jobject;
@@ -49,10 +50,11 @@ public class db_connections {
 		ResultSet set = state.executeQuery(sqlQuery);
 		return set;
 	}
-	public void ConnectionClose() throws SQLException{
+
+	public void ConnectionClose() throws SQLException {
 		con.close();
 	}
-	
+
 	public JSONArray getFromDB(String query, Connection connection) {
 
 		JSONArray jsonArray = new JSONArray();

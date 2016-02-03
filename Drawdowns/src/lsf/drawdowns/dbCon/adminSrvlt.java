@@ -162,7 +162,11 @@ public class adminSrvlt extends HttpServlet {
 				String sql_top_ten="SELECT SUM(c.mcap*d.value1) from (SELECT a.permno,a.yrmo,a.value1 as mcap FROM (SELECT permno,yrmo,value1 FROM caaf_marketcapitalization )as a JOIN (SELECT DISTINCT(PERMNO) from	sys_top10_losess WHERE CAPM_resid_date BETWEEN '"+d1+"' AND '"+d2+"') as b ON a.permno = b.permno and a.yrmo = '"+yrmo+"') as c JOIN caaf_returns as d ON c.permno=d.permno and c.yrmo =d.yrmo";
 				//String sql_top_ten="SELECT SUM(a.marketCapitalization*b.value1) FROM (SELECT PERMNO,YRMO,marketCapitalization,CAPM_resid_date FROM sys_top10_losess WHERE DATE(CAPM_resid_date) BETWEEN '"+d1+"' AND '"+d2+"' ORDER BY CAPM_resid) AS a INNER JOIN (SELECT permno,yrmo,value1 FROM caaf_returns WHERE yrmo='"+yrmo+"') AS b ON a.PERMNO=b.permno";
 				//String sql_LMC ="SELECT SUM(LOSSMcap) FROM sys_top10_losess WHERE DATE(CAPM_resid_date) BETWEEN '"+d1+"' AND '"+d2+"' ORDER BY CAPM_resid";
+
 				String sql_top_x ="SELECT SUM(c.mcap*d.value1) from (SELECT a.permno,a.yrmo,a.value1 as mcap FROM (SELECT permno,yrmo,value1 FROM caaf_marketcapitalization )as a JOIN (SELECT DISTINCT(PERMNO) FROM (SELECT * FROM sys_top10_losess_with_ratings WHERE Drawdown_rate < 9549 AND DATE(CAPM_resid_date) BETWEEN '"+d1+"' AND '"+d2+"' UNION SELECT * FROM sys_top10_losess_with_ratings WHERE Mcap_rate < 9549 AND DATE(CAPM_resid_date) BETWEEN '"+d1+"' AND '"+d2+"') AS b ) as b ON a.permno = b.permno and a.yrmo = '"+yrmo+"') as c JOIN caaf_returns as d ON c.permno=d.permno and c.yrmo =d.yrmo";
+
+				String sqlyas="SELECT SUM(x.LOSSMcap) FROM (SELECT * from sys_top10_losess_with_ratings WHERE Drawdown_rate < 9549 AND DATE(CAPM_resid_date) BETWEEN '"+d1+"' AND '"+d2+"' UNION SELECT * from sys_top10_losess_with_ratings WHERE Mcap_rate < 9549 AND DATE(CAPM_resid_date) BETWEEN '"+d1+"' AND '"+d2+"') as x";
+
 				try {
 					Date eDate = dateFormat.parse(d2);
 					Calendar calendar = Calendar.getInstance();
@@ -171,6 +175,15 @@ public class adminSrvlt extends HttpServlet {
 			        calendar.set(Calendar.DAY_OF_MONTH, 1);
 			        calendar.add(Calendar.DATE, -1);
 			        Date lastDayOfMonth = calendar.getTime();
+
+			        
+			        ResultSet rsetee = db_con.selectData(sqlyas);
+					if(rsetee.next()){
+						System.out.println(dateFormat.format(lastDayOfMonth)+","+rsetee.getDouble("SUM(x.LOSSMcap)"));
+						//endOfMonthVales.add(rset.getDouble("SUM(x.rmc)"));
+						//endOFMonthDates.add(dateFormat.format(lastDayOfMonth));
+					}
+			        
 			        /**
 					ResultSet rset = db_con.selectData(sql);
 					if(rset.next()){
@@ -186,11 +199,13 @@ public class adminSrvlt extends HttpServlet {
 						endOFMonthDates_top_ten.add(dateFormat.format(lastDayOfMonth));
 					}
 					*/
+
 					/////////////
 					ResultSet rset_top_x = db_con.selectData(sql_top_x);
 					if (rset_top_x.next()) {
 						System.out.println(dateFormat.format(lastDayOfMonth)+","+rset_top_x.getDouble("SUM(c.mcap*d.value1)"));
 					}
+
 			        /*
 					ResultSet rset_lmc_top_ten = db_con.selectData(sql_LMC);
 					if(rset_lmc_top_ten.next()){
@@ -202,7 +217,8 @@ public class adminSrvlt extends HttpServlet {
 					e.printStackTrace();
 				}
 		}
-		/*
+
+		/**
 		for (int i = 0; i < endOfMonthVales.size(); i++) {
 			Sys_CLM_EndofMonthLMC obj = new Sys_CLM_EndofMonthLMC();
 			obj.setLmcdate(endOFMonthDates.get(i));
